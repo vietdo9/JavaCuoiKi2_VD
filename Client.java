@@ -287,3 +287,4 @@ public class Client extends javax.swing.JFrame {
 	private javax.swing.JTextArea jTextArea2;
 	private javax.swing.JTextField jTextField1;
 }
+//
