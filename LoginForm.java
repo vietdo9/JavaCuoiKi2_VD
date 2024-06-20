@@ -16,7 +16,6 @@ public class LoginForm extends JFrame {
     private JTextField usernameField;
     private JPasswordField passwordField;
 
-    //adssaljdalj
     public LoginForm() {
         setTitle("Login Form");
         setSize(800, 450);
@@ -94,6 +93,11 @@ public class LoginForm extends JFrame {
 
             if (authenticateUser(username, hashedPassword)) {
                 JOptionPane.showMessageDialog(null, "Login successful!");
+                SwingUtilities.invokeLater(() -> {
+                    Client client = new Client();
+                    client.setVisible(true);
+                    dispose(); // Close the login form
+                });
             } else {
                 JOptionPane.showMessageDialog(null, "Invalid username or password.");
             }
@@ -141,4 +145,3 @@ public class LoginForm extends JFrame {
         });
     }
 }
-//
