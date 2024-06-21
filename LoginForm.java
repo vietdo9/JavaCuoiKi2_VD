@@ -11,10 +11,12 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.prefs.Preferences;
 
 public class LoginForm extends JFrame {
     private JTextField usernameField;
     private JPasswordField passwordField;
+    private static String loggedInUsername; // Biến lưu tên người dùng đăng nhập thành công
 
     public LoginForm() {
         setTitle("Login Form");
@@ -82,6 +84,12 @@ public class LoginForm extends JFrame {
         lblNewLabel.setFont(new Font("Times New Roman", Font.PLAIN, 40));
         lblNewLabel.setBounds(551, 45, 143, 56);
         panel.add(lblNewLabel);
+
+        // Kiểm tra và thiết lập tên người dùng nếu đã lưu trong Preferences
+        String savedUsername = Preferences.userRoot().get("savedUsername", null);
+        if (savedUsername != null) {
+            usernameField.setText(savedUsername);
+        }
     }
 
     private class LoginAction implements ActionListener {
@@ -93,11 +101,15 @@ public class LoginForm extends JFrame {
 
             if (authenticateUser(username, hashedPassword)) {
                 JOptionPane.showMessageDialog(null, "Login successful!");
+                loggedInUsername = username; // Lưu tên người dùng
+                // Lưu tên người dùng vào Preferences
+                Preferences.userRoot().put("savedUsername", username);
+
+                // Chạy Client trên Event Dispatch Thread và đóng LoginForm
                 SwingUtilities.invokeLater(() -> {
-                    Client client = new Client();
-                    client.setVisible(true);
-                    dispose(); // Close the login form
+                    new Client(loggedInUsername).setVisible(true);
                 });
+                dispose(); // Đóng form đăng nhập
             } else {
                 JOptionPane.showMessageDialog(null, "Invalid username or password.");
             }
@@ -121,7 +133,7 @@ public class LoginForm extends JFrame {
         private boolean authenticateUser(String username, String hashedPassword) {
             String url = "jdbc:mysql://localhost:3306/logink2";
             String dbUser = "root";
-            String dbPassword = "12345";
+            String dbPassword = "root";
 
             try (Connection connection = DriverManager.getConnection(url, dbUser, dbPassword)) {
                 String sql = "SELECT * FROM users WHERE username = ? AND password = ?";

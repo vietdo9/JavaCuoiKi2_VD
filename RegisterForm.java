@@ -93,7 +93,7 @@ public class RegisterForm extends JFrame implements ActionListener {
 
             try {
                 // Kết nối đến cơ sở dữ liệu
-                Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/logink2", "root", "12345");
+                Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/logink2", "root", "root");
 
                 // Tạo câu truy vấn để chèn dữ liệu vào bảng
                 String query = "INSERT INTO logink2.users (username, password) VALUES (?, ?)";
